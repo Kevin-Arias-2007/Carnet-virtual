@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIU Virtual</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f7fc;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 16px;
+            background: #fff;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+        header .back-btn {
+            position: absolute;
+            left: 16px;
+            color: red;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        header .title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #111;
+        }
+        .clock-card {
+            background: #e2e8fc;
+            border-radius: 16px;
+            padding: 12px 24px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            z-index: 2;
+        }
+        .clock-card h1 {
+            font-size: 36px;
+            color: #0b132b;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+        .clock-card p {
+            font-size: 15px;
+            color: #4a5568;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 210px;
+            margin: 25px auto 10px;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+        }
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: polygon(15% 0%, 85% 0%, 100% 20%, 100% 90%, 85% 100%, 15% 100%, 0% 90%, 0% 20%);
+        }
+        .clouds-container {
+            position: absolute;
+            width: 100%;
+            height: 350px;
+            top: 150px;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .cloud {
+            position: absolute;
+            background: #e8ecfd;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: floatCloud linear infinite;
+        }
+        .cloud::after, .cloud::before {
+            content: '';
+            position: absolute;
+            background: #e8ecfd;
+            border-radius: 50%;
+        }
+        .c1 {
+            width: 80px; height: 30px; top: 40px; left: -100px; animation-duration: 22s;
+        }
+        .c1::before { width: 40px; height: 40px; top: -20px; left: 15px; }
+        .c1::after { width: 50px; height: 50px; top: -25px; left: 35px; }
+        
+        .c2 {
+            width: 110px; height: 38px; top: 120px; left: -130px; animation-duration: 28s; animation-delay: 5s;
+        }
+        .c2::before { width: 50px; height: 50px; top: -25px; left: 20px; }
+        .c2::after { width: 65px; height: 65px; top: -35px; left: 45px; }
+
+        .c3 {
+            width: 90px; height: 32px; top: 200px; left: -120px; animation-duration: 20s; animation-delay: 2s;
+        }
+        .c3::before { width: 45px; height: 45px; top: -22px; left: 18px; }
+        .c3::after { width: 55px; height: 55px; top: -30px; left: 38px; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        .card-container {
+            background: #fff;
+            width: 90%;
+            max-width: 380px;
+            border-radius: 24px;
+            padding: 28px 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-top: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+        .name-title {
+            color: #d90429;
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .info-group {
+            margin-bottom: 16px;
+        }
+        .info-label {
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .info-value {
+            font-size: 18px;
+            color: #1d2d44;
+            font-weight: 700;
+        }
+        .career-title {
+            color: #2b2d42;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #4a5568;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .location span {
+            color: #d90429;
+            font-size: 16px;
+        }
+        .config-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: #1d2d44;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 20;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: c0 4px 20px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+        .modal-content h3 {
+            margin-bottom: 12px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .modal-content label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .modal-content button {
+            background: #d90429;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="back-btn">&lsaquo;</a>
+        <div class="title">TIU VIRTUAL</div>
+    </header>
+
+    <div class="clouds-container">
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="cloud c3"></div>
+    </div>
+
+    <div class="clock-card">
+        <h1 id="clock">09:44:34</h1>
+        <p id="date">Jueves, 22 Oct 2026</p>
+    </div>
+
+    <div class="avatar-container">
+        <img id="userImg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=500&q=80" alt="Foto Alumno">
+    </div>
+
+    <div class="card-container">
+        <div class="name-title" id="displayName">KEVIN ADRIAN A***<br>R***</div>
+        
+        <div class="info-group">
+            <div class="info-label">Código de alumno:</div>
+            <div class="info-value" id="displayCode">202512908</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">ID Banner:</div>
+            <div class="info-value" id="displayBanner">N04713978</div>
+        </div>
+
+        <div class="career-title" id="displayCareer">ING. SISTEMAS DE INFORMACIÓN</div>
+
+        <div class="location">
+            <span>&#9906;</span> <span id="displayCampus">Campus San Isidro</span>
+        </div>
+    </div>
+
+    <button class="config-btn" onclick="openModal()">Editar Datos</button>
+
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <h3>Editar Carné</h3>
+            <label>Nombre:</label>
+            <input type="text" id="inputName" value="KEVIN ADRIAN A*** R***">
+            <label>Código:</label>
+            <input type="text" id="inputCode" value="202512908">
+            <label>ID Banner:</label>
+            <input type="text" id="inputBanner" value="N04713978">
+            <label>Carrera:</label>
+            <input type="text" id="inputCareer" value="ING. SISTEMAS DE INFORMACIÓN">
+            <label>Campus:</label>
+            <input type="text" id="inputCampus" value="Campus San Isidro">
+            <label>URL Foto:</label>
+            <input type="text" id="inputImg" value="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=500&q=80">
+            <button onclick="saveData()">Guardar y Aplicar</button>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${h}:${m}:${s}`;
+            
+            const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+            let dateStr = now.toLocaleDateString('es-ES', options);
+            document.getElementById('date').innerText = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function openModal() {
+            document.getElementById('configModal').style.display = 'flex';
+        }
+
+        function saveData() {
+            let nameVal = document.getElementById('inputName').value;
+            document.getElementById('displayName').innerHTML = nameVal.includes(' ') ? nameVal.replace(' ', '<br>') : nameVal;
+            document.getElementById('displayCode').innerText = document.getElementById('inputCode').value;
+            document.getElementById('displayBanner').innerText = document.getElementById('inputBanner').value;
+            document.getElementById('displayCareer').innerText = document.getElementById('inputCareer').value;
+            document.getElementById('displayCampus').innerText = document.getElementById('inputCampus').value;
+            document.getElementById('userImg').src = document.getElementById('inputImg').value;
+            document.getElementById('configModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
